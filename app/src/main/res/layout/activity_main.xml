@@ -106,7 +106,9 @@
                             android:id="@+id/tv_space_holder"
                             android:text="hj"
                             android:textColor="@color/white"
-                            android:textSize="80sp"
+                            android:textSize="80sp">
+
+                        </TextView>
 
                     </LinearLayout>
 
