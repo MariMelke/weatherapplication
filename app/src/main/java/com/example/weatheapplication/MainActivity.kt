@@ -2,6 +2,20 @@ package com.example.weatheapplication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
+import com.example.weatheapplication.databinding.ActivityMainBinding
+import com.example.weatheapplication.pojo.ModelClass
+import com.example.weatheapplication.utilities.ApiUtilities
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.math.RoundingMode
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.math.roundToInt
+
 /*import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
@@ -9,9 +23,57 @@ import org.json.JSONObject
 import java.net.URL*/
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var activityMainBinding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        activityMainBinding=DataBindingUtil.setContentView(this, R.layout.activity_main)
+        supportActionBar?.hide()
+
+    }
+
+    private fun getData(cityName: String){
+
+        activityMainBinding.pbLoading.visibility= View.VISIBLE
+        ApiUtilities.getApiInterface()?.getWeatherData(cityName,"a81ffb312451c083f35db952501585b3")?.enqueue(object :
+            Callback<ModelClass> {
+            override fun onResponse(call: Call<ModelClass>, response: Response<ModelClass>) {
+                if(response.isSuccessful){
+                    setData(response.body())
+                }
+            }
+
+            override fun onFailure(call: Call<ModelClass>, t: Throwable) {
+                Toast.makeText(applicationContext, "Error", Toast.LENGTH_SHORT).show()
+            }
+
+        })
+    }
+
+    private fun setData(body: ModelClass?){
+        val sdf = SimpleDateFormat("dd/MM/yyyy hh:mm")
+        val currentDate = sdf.format(Date())
+        activityMainBinding.tvDateAndTime.text=body!!.name + " " + currentDate
+        activityMainBinding.tvDayMaxTemp.text = "High "+kelvinToFar(body!!.main.temp_max).roundToInt()+" F"
+        activityMainBinding.tvDayMinTemp.text = "High "+kelvinToFar(body!!.main.temp_min).roundToInt()+" F"
+        activityMainBinding.tvTemp.text = "High "+kelvinToFar(body!!.main.temp).roundToInt()+" F"
+        activityMainBinding.tvFeelsLike.text = "High "+kelvinToFar(body!!.main.feels_like).roundToInt()+" F"
+        activityMainBinding.tvHumidity.text = body.main.humidity.toString() +" %"
+        activityMainBinding.tvWindspeed.text = body.wind.speed.toString() + " mps"
+        activityMainBinding.tvWeatherType.text = body.weather[0].main
+
+
+
+    }
+
+    private fun kelvinToFar(temp: Double):Double
+    {
+        var cp_temp = temp
+        cp_temp = cp_temp.minus(273)
+        cp_temp = cp_temp.times(1.8)
+        cp_temp = cp_temp.plus(32)
+
+        return cp_temp.toBigDecimal().setScale(1,RoundingMode.UP).toDouble()
     }
 
     /*private fun runRequest()
