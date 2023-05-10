@@ -271,7 +271,8 @@
                                         android:textSize="15sp"
                                         android:gravity="center"
                                         android:textColor="@color/black"
-                                        android:text="40 mph">
+                                        android:text="40 mph"
+                                        android:id="@+id/tv_windspeed">
 
                                     </TextView>
 
@@ -281,8 +282,7 @@
                                         android:textSize="15sp"
                                         android:gravity="center"
                                         android:textColor="@color/black"
-                                        android:text="Windspeed"
-                                        android:id="@+id/tv_windspeed">
+                                        android:text="Windspeed">
 
                                     </TextView>
 
@@ -320,7 +320,8 @@
                                         android:textSize="15sp"
                                         android:gravity="center"
                                         android:textColor="@color/black"
-                                        android:text="40 %">
+                                        android:text="40 %"
+                                        android:id="@+id/tv_humidity">
 
                                     </TextView>
 
@@ -330,8 +331,7 @@
                                         android:textSize="15sp"
                                         android:gravity="center"
                                         android:textColor="@color/black"
-                                        android:text="Humidity"
-                                        android:id="@+id/tv_humidity">
+                                        android:text="Humidity">
 
                                     </TextView>
 

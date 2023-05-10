@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.example.weatheapplication.databinding.ActivityMainBinding
@@ -17,6 +18,7 @@ import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
+import kotlinx.coroutines.*
 
 /*import android.util.Log
 import android.widget.ImageView
@@ -26,16 +28,21 @@ import java.net.URL*/
 
 class MainActivity : AppCompatActivity() {
 
+    private val scope = MainScope()
+
     private lateinit var activityMainBinding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         activityMainBinding=DataBindingUtil.setContentView(this, R.layout.activity_main)
         supportActionBar?.hide()
-        activityMainBinding.rlMainLayout.visibility=View.GONE
+        activityMainBinding.rlMainLayout.visibility=View.VISIBLE
 
         activityMainBinding.etGetCityName.setOnEditorActionListener({v,actionId, keyEvent ->
             if(actionId==EditorInfo.IME_ACTION_SEARCH){
-                getData(activityMainBinding.etGetCityName.text.toString())
+                val cityName: EditText= findViewById(R.id.et_get_city_name)
+                getData(cityName.text.toString())
+
                 val view=this.currentFocus
                 if(view!=null)
                 {
@@ -72,9 +79,9 @@ class MainActivity : AppCompatActivity() {
         val currentDate = sdf.format(Date())
         activityMainBinding.tvDateAndTime.text=body!!.name + " " + currentDate
         activityMainBinding.tvDayMaxTemp.text = "High "+kelvinToFar(body!!.main.temp_max).roundToInt()+" F"
-        activityMainBinding.tvDayMinTemp.text = "High "+kelvinToFar(body!!.main.temp_min).roundToInt()+" F"
-        activityMainBinding.tvTemp.text = "High "+kelvinToFar(body!!.main.temp).roundToInt()+" F"
-        activityMainBinding.tvFeelsLike.text = "High "+kelvinToFar(body!!.main.feels_like).roundToInt()+" F"
+        activityMainBinding.tvDayMinTemp.text = "Low "+kelvinToFar(body!!.main.temp_min).roundToInt()+" F"
+        activityMainBinding.tvTemp.text = ""+kelvinToFar(body!!.main.temp).roundToInt()+" F"
+        activityMainBinding.tvFeelsLike.text = "Feels Like "+kelvinToFar(body!!.main.feels_like).roundToInt()+" F"
         activityMainBinding.tvHumidity.text = body.main.humidity.toString() +" %"
         activityMainBinding.tvWindspeed.text = body.wind.speed.toString() + " mps"
         activityMainBinding.tvWeatherType.text = body.weather[0].main
